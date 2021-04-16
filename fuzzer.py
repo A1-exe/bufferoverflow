@@ -12,9 +12,9 @@ import time
 #####################
 #    CONNECTIONS    #
 #####################
-HOST = None
-PORT = None
-timeout = None
+HOST = 'localhost'
+PORT = 1337
+timeout = 5
 
 #####################
 #       MISC        #
