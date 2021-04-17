@@ -41,6 +41,8 @@ def main():
     parser.add_argument('prefix', help='The fuzzing prefix')
     parser.add_argument('-f', help='Fuzzing character', metavar='char', dest='sending', default='A')
     parser.add_argument('-t', help='Timeout in seconds', metavar='number', dest='timeout', default=5)
+    parser.add_argument('-l', help='Send the prefix <number> times before the data', metavar='number', dest='preloop', default=0)
+    parser.add_argument('-d', help='Eat <number> responses between sending data', metavar='number', dest='digest', default=0)
 
     # Globals
     global payload
@@ -54,6 +56,8 @@ def main():
     timeout = abs(int(args.timeout))
     prefix = args.prefix.encode('utf-8')
     sending = args.sending.encode('utf-8')
+    preloop = abs(int(args.preloop))
+    digest = abs(int(args.digest))
     
     while True:
         try: # Detect crash
@@ -64,7 +68,20 @@ def main():
                 
                 if (length == 1): # Output banner
                     print(banner.decode('utf-8') if paintBanner else banner)
+                
+                counter = 0
+                while True:
+                    if (counter > (digest + preloop)):
+                        break  
                     
+                    if (counter < preloop):
+                        s.sendall(prefix)
+
+                    if (counter < digest):
+                        s.recv(1024)
+
+                    counter += 1
+
                 payload = generatePayload(sending)
                 print('[+] Sending %s bytes...' % len(payload))
                 s.sendall(prefix + payload + b'\n')
