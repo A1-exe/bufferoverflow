@@ -43,6 +43,8 @@ def main():
     parser.add_argument('-t', help='Timeout in seconds', metavar='number', dest='timeout', default=5)
     parser.add_argument('-l', help='Send the prefix <number> times before the data', metavar='number', dest='preloop', default=0)
     parser.add_argument('-d', help='Eat <number> responses between sending data', metavar='number', dest='digest', default=0)
+    parser.add_argument('--no-banner', help='Don\'t grab banner', metavar='bool', dest='banner', action='store_false')
+    parser.set_defaults(banner=True)
 
     # Globals
     global payload
@@ -58,16 +60,17 @@ def main():
     sending = args.sending.encode('utf-8')
     preloop = abs(int(args.preloop))
     digest = abs(int(args.digest))
+    grabBanner = args.banner 
     
     while True:
         try: # Detect crash
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.connect((HOST, PORT)) # Establish connection
                 s.settimeout(timeout)   # Set timeout
-                banner = s.recv(1024)   # Get the banner
-                
-                if (length == 1): # Output banner
-                    print(banner.decode('utf-8') if paintBanner else banner)
+                if (grabBanner):
+                    banner = s.recv(1024)   # Get the banner
+                    if (length == 1): # Output banner
+                        print(banner.decode('utf-8') if paintBanner else banner)
                 
                 counter = 0
                 while True:
