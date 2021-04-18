@@ -43,7 +43,7 @@ def main():
     parser.add_argument('-t', help='Timeout in seconds', metavar='number', dest='timeout', default=5)
     parser.add_argument('-l', help='Send the prefix <number> times before the data', metavar='number', dest='preloop', default=0)
     parser.add_argument('-d', help='Eat <number> responses between sending data', metavar='number', dest='digest', default=0)
-    parser.add_argument('--no-banner', help='Don\'t grab banner', metavar='bool', dest='banner', action='store_false')
+    parser.add_argument('--no-banner', help='Don\'t grab banner', dest='banner', action='store_false')
     parser.set_defaults(banner=True)
 
     # Globals
